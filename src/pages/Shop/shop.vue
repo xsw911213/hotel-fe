@@ -18,7 +18,7 @@
             <p class="price">{{`￥${item.price}/${item.unit}`}}</p>
             <div class="quantity">
               <a v-show="item.num" class="subtract" @click="subtract(item)">-</a>
-              <input v-show="item.num" class="num" :value="item.num"/>
+              <input v-show="item.num" class="num" :value="item.num" readonly/>
               <a class="add" @click="add(item)">+</a>
             </div>
           </li>
@@ -27,7 +27,7 @@
           <a class="left-btn" :class="categoryActive === index ? 'active':''" v-for="(item ,index) in category" :key="index" @click="changeCategory(item,index)">{{item.name}}</a>
         </ul>
       </div>
-      <div class="shopping-cart-details" v-show="shoppingCar.shoppingCartSetailsShow">
+      <div class="shopping-cart-details" v-show="shoppingCar.shoppingCartDetailsShow">
         <a class="close" @click="showDetail()"></a>
         <ul>
           <div class="first">
@@ -39,7 +39,7 @@
             <span class="price">￥ {{item.price}}</span>
             <div class="quantity">
               <a v-show="item.num" class="subtract" @click="subtract(item)">-</a>
-              <input v-show="item.num" class="num" :value="item.num"/>
+              <input v-show="item.num" class="num" :value="item.num" readonly/>
               <a class="add" @click="add(item)">+</a>
             </div>
           </li>
@@ -54,7 +54,7 @@
         <div class="all-price">
           <p>{{shoppingCar.text}}</p>
         </div>
-        <cube-button :class="shoppingCar.num ? 'fill' :''" >{{shoppingCar.num ? '去结算' : '未购物'}}</cube-button>
+        <cube-button :class="shoppingCar.num ? 'fill' :''" @click="submit()">{{shoppingCar.num ? '去结算' : '未购物'}}</cube-button>
       </div>
     </div>
     <!-- 开屏广告 -->
@@ -104,7 +104,7 @@
         shoppingCar:{
           text : '您还没有选择商品',
           num : 0,
-          shoppingCartSetailsShow:false,
+          shoppingCartDetailsShow:false,
           details:[]
         }
       }
@@ -136,7 +136,7 @@
  
         this.shoppingCar.num = num;
         if(this.shoppingCar.num === 0){
-          this.shoppingCar.shoppingCartSetailsShow = false;
+          this.shoppingCar.shoppingCartDetailsShow = false;
         }
         this.shoppingCar.text = `共  ${num}件商品   ￥${price}`;
 
@@ -170,9 +170,9 @@
       },
       showDetail(){
         if(this.shoppingCar.num > 0){
-          this.shoppingCar.shoppingCartSetailsShow = !this.shoppingCar.shoppingCartSetailsShow;
+          this.shoppingCar.shoppingCartDetailsShow = !this.shoppingCar.shoppingCartDetailsShow;
         }else{
-          this.shoppingCar.shoppingCartSetailsShow = false;
+          this.shoppingCar.shoppingCartDetailsShow = false;
         }
         
       },
@@ -180,7 +180,7 @@
         this.shoppingCar = {
           text : '您还没有选择商品',
           num : 0,
-          shoppingCartSetailsShow:false,
+          shoppingCartDetailsShow:false,
           details:[]
         }
         this.category.forEach((item,index) => {
@@ -188,9 +188,17 @@
             item.num = 0;
           })
         })
+      },
+      submit(){
+        if(this.shoppingCar.num){
+          let jsonStr = JSON.stringify(this.shoppingCar);
+          sessionStorage.setItem("shoppingCar", jsonStr);
+          this.$router.push({ name: 'order', query:this.$route.query});
+        }
       }
     },
     mounted(){
+      console.log(this.$route)
       let _this = this;
       // console.log(_this.$route)
       _this.beginAd.show = true;
@@ -255,5 +263,5 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss'>
-  @import "shop.scss";
+  @import "./shop.scss";
 </style>
