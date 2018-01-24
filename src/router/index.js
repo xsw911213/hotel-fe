@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 
-const Shop = resolve => require(['@/components/Shop'], resolve);
+const Shop = resolve => require(['../pages/Shop'], resolve);
 
 Vue.use(Router)
 

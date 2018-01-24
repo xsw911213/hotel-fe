@@ -5,27 +5,28 @@ import App from './App'
 import router from './router'
 import axios from 'axios';
 
-// import {
-//   //Style,
-//   Button,
-//   Checkbox,
-//   CheckboxGroup,
-//   Loading,
-//   Tip,
-//   Popup,
-//   Toast,
-//   Picker,
-//   TimePicker,
-//   Dialog,
-//   ActionSheet,
-//   Scroll,
-//   Slide,
-//   IndexList
-// } from 'cube-ui'
+import {
+  Style,
+  Button,
+  Checkbox,
+  CheckboxGroup,
+  Loading,
+  Tip,
+  Popup,
+  Toast,
+  Picker,
+  TimePicker,
+  Dialog,
+  ActionSheet,
+  Scroll,
+  Slide,
+  IndexList
+} from 'cube-ui'
 
-import Cube from 'cube-ui'
+//import Cube from 'cube-ui'
 
-Vue.use(Cube)
+Vue.use(Slide);
+Vue.use(Button);
 
 Vue.prototype.axios = axios;
 // Vue.use(Button)
