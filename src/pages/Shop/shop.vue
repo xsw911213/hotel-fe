@@ -1,6 +1,7 @@
 <template>
   <div class="shop">
     <div class="main">
+      <!-- 滚动广告 -->
       <cube-slide ref="slide" >
         <cube-slide-item v-for="(item, index) in topAd.data" :key="index" >
           <a :href="item.url">
@@ -8,26 +9,34 @@
           </a>
         </cube-slide-item>
       </cube-slide>
+      <!--end 滚动广告 -->
       <p class="shop-name">{{shopName}}</p>
+      <!-- 菜单 -->
       <div v-if="category.length > 0" class="commodity-service">
+        <!-- 右边栏 -->
         <ul class="right">
           <p>{{category[categoryActive].name}}</p>
           <li v-for="(item ,index) in category[categoryActive].shops" :key="index">
             <img :src="item.image">
             <p class="name">{{item.name}}</p>
             <p class="price">{{`￥${item.price}/${item.unit}`}}</p>
-            <div class="quantity">
+            <div v-if="distribution" class="quantity">
               <a v-show="item.num" class="subtract" @click="subtract(item)">-</a>
               <input v-show="item.num" class="num" :value="item.num" readonly/>
               <a class="add" @click="add(item)">+</a>
             </div>
           </li>
         </ul>
+        <!--end 右边栏 -->
+        <!-- 左边栏 -->
         <ul class="left">
           <a class="left-btn" :class="categoryActive === index ? 'active':''" v-for="(item ,index) in category" :key="index" @click="changeCategory(item,index)">{{item.name}}</a>
         </ul>
+        <!--end 左边栏 -->
       </div>
-      <div class="shopping-cart-details" v-show="shoppingCar.shoppingCartDetailsShow">
+      <!--end 菜单 -->
+      <!-- 购物车详情 -->
+      <div v-if="distribution" class="shopping-cart-details" v-show="shoppingCar.shoppingCartDetailsShow">
         <a class="close" @click="showDetail()"></a>
         <ul>
           <div class="first">
@@ -45,8 +54,9 @@
           </li>
         </ul>
       </div>
+      <!--end 购物车详情 -->
       <!-- 购物车 -->
-      <div class="shopping-cart">
+      <div v-if="distribution" class="shopping-cart">
         <a class="icon" :class="shoppingCar.num ? 'fill' :''" @click="showDetail()">
           <img src="../../assets/icon-car-fill.png">
           <span v-show="shoppingCar.num" class="num">{{shoppingCar.num}}</span>
@@ -56,15 +66,17 @@
         </div>
         <cube-button :class="shoppingCar.num ? 'fill' :''" @click="submit()">{{shoppingCar.num ? '去结算' : '未购物'}}</cube-button>
       </div>
+      <!--end 购物车 -->
     </div>
     <!-- 开屏广告 -->
     <div v-show="beginAd.show" class="ad-begin">
-      <p>点击空白处关闭...({{beginAd.second}}秒后自动关闭)</p>
-      <a class="close-ad-bgein" @click="closeBeginAd"></a>
+      <p>{{beginAd.second}}秒后自动关闭</p> 
       <a class="begin-ad-img" :href="beginAd.href">
         <img :src="beginAd.src">
+        <a class="close-ad-bgein" @click.stop="closeBeginAd"></a>
       </a>
     </div>
+    <!--end 开屏广告 -->
   </div>
 </template>
 
@@ -74,7 +86,7 @@
     name: 'shop',
     data () {
       return {
-        checked: true,
+        // 开屏广告
         beginAd:{
           show: false,
           second: 5,
@@ -85,6 +97,7 @@
             src: '//oz4rno8dv.bkt.clouddn.com/e459954134a6feeca39788f78be13506ecda7227.png'
           }
         },
+        // 滚动条广告
         topAd:{
           data:[],
           default:[
@@ -98,9 +111,15 @@
             }
           ]
         },
+        // 酒店是否支持配送
+        distribution: true,
+        // 房间信息
+        roominfo: {},
+        // 酒店名称
         shopName:'远宇诚快捷酒店',
         categoryActive: 0,
         category: [],
+        // 购物车
         shoppingCar:{
           text : '您还没有选择商品',
           num : 0,
@@ -193,12 +212,15 @@
         if(this.shoppingCar.num){
           let jsonStr = JSON.stringify(this.shoppingCar);
           sessionStorage.setItem("shoppingCar", jsonStr);
-          this.$router.push({ name: 'order', query:this.$route.query});
+          let roominfostr = sessionStorage.getItem('roominfo') || JSON.stringify(this.$route.query);
+          sessionStorage.setItem("roominfo", roominfostr);
+          this.$router.push({ name: 'order', query:this.roominfo});
         }
       }
     },
     mounted(){
       console.log(this.$route)
+      this.roominfo = JSON.parse(sessionStorage.getItem('roominfo')) || this.$route.query;
       let _this = this;
       // console.log(_this.$route)
       _this.beginAd.show = true;

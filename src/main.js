@@ -27,8 +27,12 @@ import {
 
 Vue.use(Slide);
 Vue.use(Button);
+Vue.use(Dialog);
 
 Vue.prototype.axios = axios;
+
+// Vue.prototype.router = router;
+
 // Vue.use(Button)
 // Vue.use(Checkbox)
 
