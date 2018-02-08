@@ -221,10 +221,6 @@
     },
     mounted(){
       this.roominfo = JSON.parse(sessionStorage.getItem('roominfo')) || this.$route.query;
-      let shoppingCar = JSON.parse(sessionStorage.getItem('shoppingCar'));
-      if(shoppingCar){
-        this.shoppingCar = shoppingCar;
-      }
       let _this = this;
       // console.log(_this.$route)
       _this.beginAd.show = true;
