@@ -8,7 +8,7 @@ const Order = resolve => require(['../pages/Order/order'], resolve);
 Vue.use(Router)
 
 const router = new Router({
-  // mode:'history',
+  mode:'history',
   routes: [
     {
       path: '/shop',

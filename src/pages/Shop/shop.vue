@@ -71,10 +71,13 @@
     <!-- 开屏广告 -->
     <div v-show="beginAd.show" class="ad-begin">
       <p>{{beginAd.second}}秒后自动关闭</p> 
-      <a class="begin-ad-img" :href="beginAd.href">
-        <img :src="beginAd.src">
+      <div class="begin-ad-img" >
+        <a :href="beginAd.href">
+          <img :src="beginAd.src">
+        </a>
         <a class="close-ad-bgein" @click.stop="closeBeginAd"></a>
-      </a>
+      </div>
+      
     </div>
     <!--end 开屏广告 -->
   </div>
@@ -184,8 +187,6 @@
             }
           })
         }
-
-        console.log(this.shoppingCar.details)
       },
       showDetail(){
         if(this.shoppingCar.num > 0){
@@ -193,7 +194,6 @@
         }else{
           this.shoppingCar.shoppingCartDetailsShow = false;
         }
-        
       },
       clearShoppingCar(){
         this.shoppingCar = {
@@ -207,6 +207,7 @@
             item.num = 0;
           })
         })
+        sessionStorage.removeItem('shoppingCar');
       },
       submit(){
         if(this.shoppingCar.num){
@@ -219,8 +220,11 @@
       }
     },
     mounted(){
-      console.log(this.$route)
       this.roominfo = JSON.parse(sessionStorage.getItem('roominfo')) || this.$route.query;
+      let shoppingCar = JSON.parse(sessionStorage.getItem('shoppingCar'));
+      if(shoppingCar){
+        this.shoppingCar = shoppingCar;
+      }
       let _this = this;
       // console.log(_this.$route)
       _this.beginAd.show = true;
