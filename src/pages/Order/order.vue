@@ -48,6 +48,7 @@ export default {
         let obj = {};
         obj.name = item.name;
         obj.price = item.price;
+        obj.unit = item.unit;
         obj.num = item.num;
         list.push(obj);
       })
