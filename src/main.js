@@ -23,13 +23,17 @@ import {
   IndexList
 } from 'cube-ui'
 
+import host from '../config/host'
+
 //import Cube from 'cube-ui'
 
 Vue.use(Slide);
 Vue.use(Button);
 Vue.use(Dialog);
+Vue.use(Loading);
 
 Vue.prototype.axios = axios;
+Vue.prototype.host = host;
 
 // Vue.prototype.router = router;
 

@@ -14,6 +14,18 @@
       color: #fff;
       font-size: .35rem;
       background-color: $main-color;
+
+      .tel{
+        display: inline-block;
+        position: absolute;
+        right: .8rem;
+        width: .35rem;
+        height: .35rem;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
 
     .commodity-service{
@@ -141,6 +153,11 @@
 
       .add{
         right: 0;
+      }
+
+      .putaway{
+        font-size: .15rem;
+        color: #a0a0a0;
       }
     }
 

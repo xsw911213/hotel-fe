@@ -4,9 +4,9 @@
 
 const path = require('path')
 
-var os=require('os')
-var iptable={}
-var ifaces=os.networkInterfaces()
+var os = require('os')
+var iptable = {}
+var ifaces = os.networkInterfaces()
 var net = require('net')
 
 

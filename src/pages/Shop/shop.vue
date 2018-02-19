@@ -10,27 +10,32 @@
         </cube-slide-item>
       </cube-slide>
       <!--end 滚动广告 -->
-      <p class="shop-name">{{shopName}}</p>
+      <p class="shop-name">{{shopName}} <a class="tel" :href="`tel:${tel}`"><img src="../../assets/tel.png" alt=""></a></p>
       <!-- 菜单 -->
       <div v-if="category.length > 0" class="commodity-service">
         <!-- 右边栏 -->
         <ul class="right">
-          <p>{{category[categoryActive].name}}</p>
-          <li v-for="(item ,index) in category[categoryActive].shops" :key="index">
-            <img :src="item.image">
+          <p>{{category[categoryActive].categoryName}}</p>
+          <li v-for="(item ,index) in category[categoryActive].details" :key="index">
+            <img :src="item.img">
             <p class="name">{{item.name}}</p>
             <p class="price">{{`￥${item.price}/${item.unit}`}}</p>
             <div v-if="distribution" class="quantity">
-              <a v-show="item.num" class="subtract" @click="subtract(item)">-</a>
-              <input v-show="item.num" class="num" :value="item.num" readonly/>
-              <a class="add" @click="add(item)">+</a>
+              <div v-if="item.putaway">
+                <a v-show="item.num" class="subtract" @click="subtract(item)">-</a>
+                <input v-show="item.num" class="num" :value="item.num" readonly/>
+                <a class="add" @click="add(item)">+</a>
+              </div>
+              <div v-else>
+                <p class="putaway">该商品已经下架</p>
+              </div>
             </div>
           </li>
         </ul>
         <!--end 右边栏 -->
         <!-- 左边栏 -->
         <ul class="left">
-          <a class="left-btn" :class="categoryActive === index ? 'active':''" v-for="(item ,index) in category" :key="index" @click="changeCategory(item,index)">{{item.name}}</a>
+          <a class="left-btn" :class="categoryActive === index ? 'active':''" v-for="(item ,index) in category" :key="index" @click="changeCategory(item,index)">{{item.categoryName}}</a>
         </ul>
         <!--end 左边栏 -->
       </div>
@@ -119,7 +124,8 @@
         // 房间信息
         roominfo: {},
         // 酒店名称
-        shopName:'远宇诚快捷酒店',
+        shopName:'',
+        tel:'',
         categoryActive: 0,
         category: [],
         // 购物车
@@ -149,13 +155,14 @@
       setShoppingCarData(shop,isAdd){
         let num = 0;
         let price = 0;
+
         this.category.forEach((item,index) => {
-          item.shops.forEach((item)=>{
+          item.details.forEach((item)=>{
             num += item.num;
             price += item.num * item.price;
           })
         })
- 
+
         this.shoppingCar.num = num;
         if(this.shoppingCar.num === 0){
           this.shoppingCar.shoppingCartDetailsShow = false;
@@ -203,7 +210,7 @@
           details:[]
         }
         this.category.forEach((item,index) => {
-          item.shops.forEach((item)=>{
+          item.details.forEach((item)=>{
             item.num = 0;
           })
         })
@@ -213,6 +220,7 @@
         if(this.shoppingCar.num){
           let jsonStr = JSON.stringify(this.shoppingCar);
           sessionStorage.setItem("shoppingCar", jsonStr);
+          this.$route.query.tel = this.tel;
           let roominfostr = sessionStorage.getItem('roominfo') || JSON.stringify(this.$route.query);
           sessionStorage.setItem("roominfo", roominfostr);
           this.$router.push({ name: 'order', query:this.roominfo});
@@ -267,13 +275,33 @@
         }
       )
 
-      data.forEach((item,index) => {
-        item.shops.forEach((item)=>{
-          item.num = 0;
-        })
-      })
+     
+      console.log(this.host.baseUrl)
         
-      _this.category = data;
+      // 
+      _this.axios({
+        method: 'get',
+        url: '/baseinfosetting',
+        params: {userid: _this.$route.query.userid},
+        baseURL: _this.host.baseUrl
+        //baseURL:'http://10.168.34.43:3008/api'
+      }).then((res)=>{
+        console.log(res)
+        let data = res.data.data;
+        // console.log(data);
+        _this.category = data.commodityList;
+
+        _this.category.forEach((item,index) => {
+          item.details.forEach((item)=>{
+            item.num = 0;
+          })
+        })
+        _this.shopName = data.pageInfo.name;
+        _this.tel = data.pageInfo.tel;
+        _this.distribution = data.pageInfo.delivery;
+        sessionStorage.setItem("marked", data.pageInfo.marked);
+        sessionStorage.setItem("printer", JSON.stringify(data.printers));
+      })
 
       // console.log(data);
       
