@@ -1,6 +1,9 @@
 <template>
   <div class="shop">
-    <div class="main">
+    <div v-show="errorRoom" class="error-room">
+      <p>该房间二维码已经失效</p>
+    </div>
+    <div v-show="!errorRoom" class="main">
       <!-- 滚动广告 -->
       <cube-slide ref="slide" >
         <cube-slide-item v-for="(item, index) in topAd.data" :key="index" >
@@ -73,6 +76,7 @@
       </div>
       <!--end 购物车 -->
     </div>
+    
     <!-- 开屏广告 -->
     <div v-show="beginAd.show" class="ad-begin">
       <p>{{beginAd.second}}秒后自动关闭</p> 
@@ -85,6 +89,7 @@
       
     </div>
     <!--end 开屏广告 -->
+    
   </div>
 </template>
 
@@ -102,7 +107,8 @@
           src: '',
           default:{
             href: '#',
-            src: '//oz4rno8dv.bkt.clouddn.com/e459954134a6feeca39788f78be13506ecda7227.png'
+            // src: '//oz4rno8dv.bkt.clouddn.com/e459954134a6feeca39788f78be13506ecda7227.png',
+            src: '//oz4rno8dv.bkt.clouddn.com/6896a8696b8038f4fc8989ab005e4fccc3b90047.jpg'
           }
         },
         // 滚动条广告
@@ -119,6 +125,7 @@
             }
           ]
         },
+        errorRoom: true,
         // 酒店是否支持配送
         distribution: true,
         // 房间信息
@@ -290,6 +297,17 @@
         let data = res.data.data;
         // console.log(data);
         _this.category = data.commodityList;
+
+        //判断房间是否存在
+        let room = _this.$route.query.room;
+        console.log(room,data.roomList)
+        for(let item of data.roomList){
+          console.log(item);
+          if(item === room){
+            _this.errorRoom = false;
+            break
+          }
+        }
 
         _this.category.forEach((item,index) => {
           item.details.forEach((item)=>{
