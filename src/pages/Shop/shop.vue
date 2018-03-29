@@ -20,7 +20,10 @@
         <ul class="right">
           <p>{{category[categoryActive].categoryName}}</p>
           <li v-for="(item ,index) in category[categoryActive].details" :key="index">
-            <img :src="item.img">
+            <div class="img">
+              <img :src="item.img">
+              <span>图片仅供参考</span>
+            </div>
             <p class="name">{{item.name}}</p>
             <p class="price">{{`￥${item.price}/${item.unit}`}}</p>
             <div v-if="distribution" class="quantity">
@@ -302,7 +305,6 @@
         let room = _this.$route.query.room;
         console.log(room,data.roomList)
         for(let item of data.roomList){
-          console.log(item);
           if(item === room){
             _this.errorRoom = false;
             break
