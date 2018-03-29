@@ -8,6 +8,9 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    .cube-slide{
+      height: (80 * 7.5 / 414) + rem;
+    }
 
     .shop-name{
       padding: .25rem;
@@ -66,9 +69,10 @@
       }
 
       .right{
-
+        box-sizing: border-box;
         height: 100%;
         padding-left: 1.53rem;
+        padding-bottom: .6rem;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
 
