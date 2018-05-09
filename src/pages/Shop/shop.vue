@@ -1,7 +1,7 @@
 <template>
   <div class="shop">
     <div v-show="errorRoom" class="error-room">
-      <p>该房间二维码已经失效</p>
+      <p>该二维码已经失效</p>
     </div>
     <div v-show="!errorRoom" class="main">
       <!-- 滚动广告 -->
@@ -128,7 +128,7 @@
             }
           ]
         },
-        errorRoom: false,
+        errorRoom: true,
         // 酒店是否支持配送
         distribution: true,
         // 房间信息
