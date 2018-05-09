@@ -128,7 +128,7 @@
             }
           ]
         },
-        errorRoom: true,
+        errorRoom: false,
         // 酒店是否支持配送
         distribution: true,
         // 房间信息
@@ -267,10 +267,21 @@
           }
 
           if(data.topAd.length > 0){
-
+            let getAdData = data.topAd[0];
+            let setAdData = [];
+            console.log(getAdData)
+            for(let i = 0 ; i < 3 ;i++){
+              if(getAdData.adimg[i]){
+                _this.topAd.data.push({url:getAdData.link[i],image:getAdData.adimg[i]})
+              }
+            }
+            let max = _this.topAd.data.length;
+            for(let j = 0; j < (3-max) ;j++){
+              _this.topAd.data.push(_this.topAd.default[j]);
+            }
+            // console.log(_this.topAd.data)
           }else if(data.topAd.length === 0){
             _this.topAd.data = _this.topAd.default;
-            
           }
           _this.$refs.slide.refresh();
 
